@@ -41,6 +41,7 @@ namespace AdventureWorksAPI
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+            builder.Services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
 
             var app = builder.Build();
 

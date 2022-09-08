@@ -19,16 +19,16 @@ namespace AdventureWorksAPI.Controllers
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<ProductCategory>))]
-        public async Task<IEnumerable<ProductCategory>> GetProductCategories(string? productName)
+        public async Task<IEnumerable<ProductCategory>> GetProductCategories(string? productCategoryName)
         {
-            if (string.IsNullOrEmpty(productName))
+            if (string.IsNullOrEmpty(productCategoryName))
             {
                 return await repo.RetrieveAllAsync();
             }
             else
             {
                 return (await repo.RetrieveAllAsync())
-                        .Where(productCategory => productCategory.Name == productName);
+                        .Where(productCategory => productCategory.Name == productCategoryName);
             }
         }
 
