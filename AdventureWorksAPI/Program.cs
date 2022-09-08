@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using AdventureWorksNS.Data;
 using static System.Console;
 using AdventureWorksAPI.Repositories;
+using System.Text.Json.Serialization;
+
 
 namespace AdventureWorksAPI
 {
@@ -10,6 +12,7 @@ namespace AdventureWorksAPI
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            //builder.WebHost.UseUrls();
 
             // Agregar el contexto de la base de datos de AdventureWorks
             builder.Services.AdventureWorksDBContext();
@@ -19,7 +22,7 @@ namespace AdventureWorksAPI
             builder.Services.AddControllers(options =>
                 {
                     WriteLine("Formatos por omision:");
-                    foreach(IOutputFormatter formatter in options.OutputFormatters)
+                    foreach (IOutputFormatter formatter in options.OutputFormatters)
                     {
                         OutputFormatter? mediaFormatter = formatter as OutputFormatter;
                         if (mediaFormatter == null)
@@ -34,7 +37,9 @@ namespace AdventureWorksAPI
                     }
                 })
                 .AddXmlDataContractSerializerFormatters()
-                .AddXmlSerializerFormatters();
+                .AddXmlSerializerFormatters()
+            .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
