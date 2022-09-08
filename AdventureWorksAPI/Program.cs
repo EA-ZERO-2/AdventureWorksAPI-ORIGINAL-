@@ -3,7 +3,7 @@ using AdventureWorksNS.Data;
 using static System.Console;
 using AdventureWorksAPI.Repositories;
 using System.Text.Json.Serialization;
-
+using Microsoft.Extensions.Options;
 
 namespace AdventureWorksAPI
 {
@@ -48,6 +48,13 @@ namespace AdventureWorksAPI
             builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
             builder.Services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
 
+            /// agregar cors-origins 
+            builder.Services.AddCors();
+
+
+            builder.Services.AddHealthChecks()                .AddDbContextCheck<AdventureWorksDB>();
+
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -62,7 +69,20 @@ namespace AdventureWorksAPI
             app.UseAuthorization();
 
 
+
+            app.UseCors(configurePolicy: Options =>
+            {
+                Options.WithMethods("GET", "POST", "PUT", "DELETE");                Options.WithOrigins("https://localhost:7260/");
+
+            });
+
+
+
             app.MapControllers();
+
+            app.UseHealthChecks(path: "/estado");
+
+            app.UseMiddleware<SecuityHealter>();
 
             app.Run();
         }
